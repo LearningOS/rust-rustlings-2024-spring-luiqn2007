@@ -39,11 +39,11 @@ mod my_module {
                 Command::Uppercase => string.to_uppercase(),
                 Command::Trim => string.trim().to_string(),
                 Command::Append(n) => {
-                    let mut s = string;
-                    let mut t = n;
-                    while *t > 0usize {
+                    let mut s = string.clone();
+                    let mut t = 0usize;
+                    while &t != n {
                         s.push_str("bar");
-                        t = t - 1usize;
+                        t += 1;
                     }
                     s
                 }
