@@ -39,11 +39,20 @@ enum IntoColorError {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
-        if tuple.0 < 0 || tuple.1 < 0 || tuple.2 < 0 || tuple.0 > 255 || tuple.1 > 255 || tuple.2 > 255 {
-            Err(IntoColorError::IntConversion)
-        } else {
-            Ok(Color{ red: tuple.0 as u8, green: tuple.1 as u8, blue: tuple.2 as u8 })
-        }
+        // use tuple_map::*;
+        vec![tuple.0, tuple.1, tuple.2].iter()
+            .map(|c| (0 ..=255).contains(c))
+            .reduce(|a, b| a && b)
+            .filter(|c| *c)
+            .map(|c| Color{ red: tuple.0 as u8, green: tuple.1 as u8, blue: tuple.2 as u8 })
+            .ok_or(IntoColorError::IntConversion)
+
+
+        // if tuple.0 < 0 || tuple.1 < 0 || tuple.2 < 0 || tuple.0 > 255 || tuple.1 > 255 || tuple.2 > 255 {
+        //     Err(IntoColorError::IntConversion)
+        // } else {
+        //     Ok(Color{ red: tuple.0 as u8, green: tuple.1 as u8, blue: tuple.2 as u8 })
+        // }
     }
 }
 
